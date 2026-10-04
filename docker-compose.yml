@@ -1,0 +1,39 @@
+services:
+  rmq01:
+    image: rabbitmq:3.12-management
+    hostname: rmq01
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=MY_SECRET_COOKIE
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rmq01_data:/var/lib/rabbitmq
+    networks:
+      - rabbitnet
+
+  rmq02:
+    image: rabbitmq:3.12-management
+    hostname: rmq02
+    environment:
+      - RABBITMQ_ERLANG_COOKIE=MY_SECRET_COOKIE
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    volumes:
+      - rmq02_data:/var/lib/rabbitmq
+    depends_on:
+      - rmq01
+    networks:
+      - rabbitnet
+
+volumes:
+  rmq01_data:
+  rmq02_data:
+
+networks:
+  rabbitnet:
